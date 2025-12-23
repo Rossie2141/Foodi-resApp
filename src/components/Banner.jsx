@@ -1,12 +1,14 @@
 import React from 'react';
 import MainFoodImg from "../assets/MainFoodImg.jpg";
+import SpicyNoodlesImg from '../assets/SpicyNoodlesImg.jpg'
 import PlayCircleFilledRoundedIcon from '@mui/icons-material/PlayCircleFilledRounded';
+import Lady from '../assets/Lady.jpg'
 
 const Banner = () => {
   const styles = {
     container: {
       display: 'flex',
-      justifyContent: 'space-between',
+      justifyContent: 'space-evenly',
       alignItems: 'flex-end',
       padding: '0 clamp(20px, 5vw, 40px)',
       fontFamily: "Poppins, sans-serif",
@@ -84,12 +86,12 @@ const Banner = () => {
     imageContainer: {
       flex: 1,
       display: 'flex',
-      justifyContent: 'flex-end',
+      justifyContent: 'space-evenly',
       alignItems: 'flex-start',
     },
 
     mainImage: {
-      width: '380px',
+      width: '300px',
       aspectRatio: '1 / 1',
       borderRadius: '50%',
       objectFit: 'cover',
@@ -153,6 +155,7 @@ const Banner = () => {
 
         <div className="image-container" style={styles.imageContainer}>
           <img src={MainFoodImg} alt="Main Dish" style={styles.mainImage} />
+          <img src={SpicyNoodlesImg} alt="Main Dish" style={styles.mainImage} />
         </div>
       </div>
     </>

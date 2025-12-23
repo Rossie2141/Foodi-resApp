@@ -196,8 +196,8 @@ const Header = () => {
       <header style={useStyles.header}>
         {/* Logo */}
         <div style={useStyles.logo}>
-          <span style={useStyles.logoIcon}>F</span>
-          <span>OODI</span>
+          <span style={useStyles.logoIcon}>P</span>
+          <span>OODIE</span>
         </div>
 
         {/* Desktop Navigation */}
