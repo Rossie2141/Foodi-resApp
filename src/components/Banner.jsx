@@ -2,7 +2,7 @@ import React from 'react';
 import MainFoodImg from "../assets/MainFoodImg.jpg";
 import SpicyNoodlesImg from '../assets/SpicyNoodlesImg.jpg'
 import PlayCircleFilledRoundedIcon from '@mui/icons-material/PlayCircleFilledRounded';
-import Lady from '../assets/Lady.jpg'
+import Lady from '../assets/Intersect.jpg'
 
 const Banner = () => {
   const styles = {
@@ -154,7 +154,7 @@ const Banner = () => {
         </div>
 
         <div className="image-container" style={styles.imageContainer}>
-          <img src={MainFoodImg} alt="Main Dish" style={styles.mainImage} />
+          <img src={Lady} alt="Main Dish" style={styles.mainImage} />
           <img src={SpicyNoodlesImg} alt="Main Dish" style={styles.mainImage} />
         </div>
       </div>
