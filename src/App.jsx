@@ -2,6 +2,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 
 import Home from "./components/Home";
+import MenuPage from "./components/MenuComponents";
 
 import { Routes, Route, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -27,7 +28,7 @@ const App = () => {
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/menu" element={<h1>Hello Menu</h1>} />
+        <Route path="/menu" element={<MenuPage/>} />
         <Route path="/services" element={<h1>Hello Services</h1>} />
         <Route path="/offers" element={<h1>Hello Offers</h1>} />
       </Routes>

@@ -48,7 +48,7 @@ const Footer = () => {
         </div>
 
         <p style={styles.copy}>
-          Copyright © 2023 Dscode | All rights reserved
+          Copyright © 2025 DJ | All rights reserved
         </p>
       </div>
     </footer>
