@@ -9,7 +9,7 @@ const Footer = () => {
     <footer style={styles.footer}>
       <div style={styles.top}>
         <div>
-          <h3 style={styles.logo}>Foodi</h3>
+          <h3 style={styles.logo}>Poodi</h3>
           <p style={styles.desc}>
             Savor the artistry where every dish is a culinary masterpiece
           </p>

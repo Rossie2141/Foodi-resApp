@@ -1,15 +1,25 @@
 import React, { useState } from "react";
-import SearchIcon from '@mui/icons-material/Search';
-import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
-import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
-import MenuIcon from '@mui/icons-material/Menu';
-import CloseIcon from '@mui/icons-material/Close';
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { setActivePage } from "../redux/slices/navigationSlice";
+
+import SearchIcon from "@mui/icons-material/Search";
+import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
+import CallOutlinedIcon from "@mui/icons-material/CallOutlined";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const activePage = useSelector((state) => state.navigation.activePage);
+
+  const handleNav = (page, path) => {
+    dispatch(setActivePage(page));
+    navigate(path);
+    setMobileMenuOpen(false);
   };
 
   const useStyles = {
@@ -28,6 +38,7 @@ const Header = () => {
       boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
       boxSizing: "border-box",
     },
+
     logo: {
       display: "flex",
       alignItems: "center",
@@ -35,10 +46,10 @@ const Header = () => {
       fontSize: "clamp(18px, 4vw, 24px)",
       color: "#000",
       gap: "5px",
-      zIndex: 1001,
+      cursor: "pointer",
     },
+
     logoIcon: {
-      display: "inline-block",
       width: "30px",
       height: "30px",
       backgroundColor: "#7ed957",
@@ -48,12 +59,13 @@ const Header = () => {
       lineHeight: "30px",
       fontWeight: "bold",
     },
+
     nav: {
       display: "flex",
       alignItems: "center",
       gap: "25px",
-      fontSize: "16px",
     },
+
     navMobile: {
       position: "fixed",
       top: 0,
@@ -63,49 +75,40 @@ const Header = () => {
       height: "100vh",
       backgroundColor: "#fff",
       flexDirection: "column",
-      alignItems: "flex-start",
-      padding: "80px 30px 30px",
+      padding: "80px 30px",
       gap: "20px",
-      transition: "right 0.3s ease-in-out",
+      transition: "right 0.3s ease",
       boxShadow: "-2px 0 10px rgba(0,0,0,0.1)",
       zIndex: 999,
     },
+
     navLink: {
-      textDecoration: "none",
-      color: "#000",
-      position: "relative",
       cursor: "pointer",
-      whiteSpace: "nowrap",
+      fontWeight: 500,
+      color: "#000",
     },
+
     activeLink: {
       color: "#7ed957",
     },
-    arrow: {
-      marginLeft: "4px",
-      fontSize: "12px",
-    },
+
     headerActions: {
       display: "flex",
       alignItems: "center",
-      gap: "clamp(8px, 2vw, 15px)",
+      gap: "15px",
     },
+
     iconBtn: {
       background: "none",
       border: "none",
-      fontSize: "18px",
       cursor: "pointer",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: "5px",
     },
+
     cart: {
       position: "relative",
-      fontSize: "18px",
       cursor: "pointer",
-      display: "flex",
-      alignItems: "center",
     },
+
     cartBadge: {
       position: "absolute",
       top: "-8px",
@@ -115,11 +118,12 @@ const Header = () => {
       borderRadius: "50%",
       width: "18px",
       height: "18px",
+      fontSize: "12px",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      fontSize: "12px",
     },
+
     contactBtn: {
       backgroundColor: "#7ed957",
       color: "#fff",
@@ -127,141 +131,128 @@ const Header = () => {
       borderRadius: "25px",
       padding: "8px 15px",
       cursor: "pointer",
-      fontSize: "clamp(13px, 2vw, 16px)",
       display: "flex",
       alignItems: "center",
       gap: "5px",
-      whiteSpace: "nowrap",
     },
+
     hamburger: {
       display: "none",
       background: "none",
       border: "none",
-      fontSize: "24px",
       cursor: "pointer",
-      padding: "5px",
-      zIndex: 1001,
     },
+
     overlay: {
       position: "fixed",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100vh",
+      inset: 0,
       backgroundColor: "rgba(0,0,0,0.5)",
       display: mobileMenuOpen ? "block" : "none",
       zIndex: 998,
     },
+
     closeBtn: {
       position: "absolute",
-      top: "20px",
-      right: "20px",
+      top: 20,
+      right: 20,
       background: "none",
       border: "none",
-      fontSize: "24px",
       cursor: "pointer",
-      padding: "5px",
     },
   };
 
-  // Media query styles
-  const mediaStyles = `
-    @media (max-width: 768px) {
-      .desktop-nav {
-        display: none !important;
-      }
-      .hamburger {
-        display: flex !important;
-      }
-      .contact-text {
-        display: none;
-      }
-    }
-    @media (min-width: 769px) {
-      .mobile-nav {
-        display: none !important;
-      }
-    }
-    @media (max-width: 480px) {
-      .search-icon {
-        display: none;
-      }
-    }
-  `;
-
   return (
     <>
-      <style>{mediaStyles}</style>
-      
       <header style={useStyles.header}>
         {/* Logo */}
-        <div style={useStyles.logo}>
+        <div
+          style={useStyles.logo}
+          onClick={() => handleNav("home", "/")}
+        >
           <span style={useStyles.logoIcon}>P</span>
           <span>OODIE</span>
         </div>
 
-        {/* Desktop Navigation */}
-        <nav className="desktop-nav" style={useStyles.nav}>
-          <a href="#" style={{ ...useStyles.navLink, ...useStyles.activeLink }}>Home</a>
-          <div style={useStyles.navLink}>
-            Menu <span style={useStyles.arrow}>▾</span>
-          </div>
-          <div style={useStyles.navLink}>
-            Services <span style={useStyles.arrow}>▾</span>
-          </div>
-          <a href="#" style={useStyles.navLink}>Offers</a>
+        {/* Desktop Nav */}
+        <nav style={useStyles.nav} className="desktop-nav">
+          <span
+            style={{
+              ...useStyles.navLink,
+              ...(activePage === "home" && useStyles.activeLink),
+            }}
+            onClick={() => handleNav("home", "/")}
+          >
+            Home
+          </span>
+
+          <span
+            style={{
+              ...useStyles.navLink,
+              ...(activePage === "menu" && useStyles.activeLink),
+            }}
+            onClick={() => handleNav("menu", "/menu")}
+          >
+            Menu
+          </span>
+
+          <span
+            style={{
+              ...useStyles.navLink,
+              ...(activePage === "services" && useStyles.activeLink),
+            }}
+            onClick={() => handleNav("services", "/services")}
+          >
+            Services
+          </span>
+
+          <span
+            style={{
+              ...useStyles.navLink,
+              ...(activePage === "offers" && useStyles.activeLink),
+            }}
+            onClick={() => handleNav("offers", "/offers")}
+          >
+            Offers
+          </span>
         </nav>
 
-        {/* Right Section */}
+        {/* Right */}
         <div style={useStyles.headerActions}>
-          <button className="search-icon" style={useStyles.iconBtn} aria-label="Search">
-            <SearchIcon/>
+          <button style={useStyles.iconBtn}>
+            <SearchIcon />
           </button>
 
           <div style={useStyles.cart}>
-            <WorkOutlineIcon/>
+            <WorkOutlineIcon />
             <span style={useStyles.cartBadge}>8</span>
           </div>
 
           <button style={useStyles.contactBtn}>
-            <CallOutlinedIcon/>
-            <span className="contact-text">Contact</span>
+            <CallOutlinedIcon /> Contact
           </button>
 
-          {/* Hamburger Menu */}
-          <button 
-            className="hamburger" 
+          <button
             style={useStyles.hamburger}
-            onClick={toggleMobileMenu}
-            aria-label="Menu"
+            onClick={() => setMobileMenuOpen(true)}
           >
-            <MenuIcon/>
+            <MenuIcon />
           </button>
         </div>
       </header>
 
-      {/* Mobile Navigation */}
-      <nav className="mobile-nav" style={useStyles.navMobile}>
-        <button style={useStyles.closeBtn} onClick={toggleMobileMenu} aria-label="Close menu">
-          <CloseIcon/>
+      {/* Mobile Nav */}
+      <nav style={useStyles.navMobile}>
+        <button style={useStyles.closeBtn} onClick={() => setMobileMenuOpen(false)}>
+          <CloseIcon />
         </button>
-        
-        <a href="#" style={{ ...useStyles.navLink, ...useStyles.activeLink }} onClick={toggleMobileMenu}>
-          Home
-        </a>
-        <div style={useStyles.navLink}>
-          Menu <span style={useStyles.arrow}>▾</span>
-        </div>
-        <div style={useStyles.navLink}>
-          Services <span style={useStyles.arrow}>▾</span>
-        </div>
-        <a href="#" style={useStyles.navLink} onClick={toggleMobileMenu}>
-          Offers
-        </a>
+
+        <span onClick={() => handleNav("home", "/")}>Home</span>
+        <span onClick={() => handleNav("menu", "/menu")}>Menu</span>
+        <span onClick={() => handleNav("services", "/services")}>Services</span>
+        <span onClick={() => handleNav("offers", "/offers")}>Offers</span>
       </nav>
 
-      {/* Overlay */}
-      <div style={useStyles.overlay} onClick={toggleMobileMenu}></div>
+      <div style={useStyles.overlay} onClick={() => setMobileMenuOpen(false)} />
     </>
   );
 };
