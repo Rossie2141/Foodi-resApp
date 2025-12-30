@@ -1,253 +1,296 @@
-import React, { useState } from "react";
+import React from "react";
 
-/* ---------------- Shared Layout Styles ---------------- */
-
-const containerStyle = {
-  width:'100%',
-  maxWidth: "1200px",
-  margin: "0 auto",
-  padding: "0 20px",
-};
-
-const sectionStyle = {
-  marginBottom: "64px",
-};
-
-const gridStyle = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-  gap: "32px",
-};
-
-/* ---------------- Reusable Dish Card ---------------- */
-
-const DishCard = ({ bg, icon, title, desc, price, rating, badge }) => (
-  <div
-    style={{
+const useStyles = () => {
+  return {
+    menuWrapper: {
+      width: "100%",
+      background: "#fff",
+      padding: "24px 0",
+    },
+    menuInner: {
+      maxWidth: "1400px",
+      margin: "0 auto",
+      padding: "0 32px",
+    },
+    menuTitle: {
+      fontSize: "36px",
+      fontWeight: 700,
+      textAlign: "center",
+      marginTop: "48px",
+    },
+    menuSubtitle: {
+      textAlign: "center",
+      color: "#666",
+      margin: "12px 0 64px",
+    },
+    categoryBar: {
+      display: "flex",
+      justifyContent: "center",
+      gap: "20px",
+      marginBottom: "64px",
+      flexWrap: "wrap",
+    },
+    categoryPill: {
+      padding: "14px 28px",
+      borderRadius: "999px",
+      border: "2px solid #e6e6e6",
+      background: "#fff",
+      fontWeight: 600,
+      color: "#333",
+    },
+    categoryPillActive: {
+      padding: "14px 28px",
+      borderRadius: "999px",
+      border: "2px solid #6fdc5c",
+      background: "#6fdc5c",
+      fontWeight: 600,
+      color: "#fff",
+    },
+    sectionHeader: {
+      margin: "48px 0 24px",
+    },
+    sectionHeaderTitle: {
+      margin: 0,
+      fontSize: "28px",
+    },
+    sectionHeaderCount: {
+      fontSize: "14px",
+      color: "#777",
+    },
+    menuGrid: {
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+      gap: "28px",
+    },
+    menuCard: {
+      background: "white",
       borderRadius: "24px",
+      boxShadow: "0 8px 30px rgba(0, 0, 0, 0.06)",
       overflow: "hidden",
-      backgroundColor: "white",
-      boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-      cursor: "pointer",
+    },
+    menuCardTop: {
+      height: "160px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
       position: "relative",
-      transition: "all 0.3s ease",
-    }}
-    onMouseEnter={(e) => {
-      e.currentTarget.style.transform = "translateY(-8px)";
-      e.currentTarget.style.boxShadow = "0 8px 30px rgba(0,0,0,0.12)";
-    }}
-    onMouseLeave={(e) => {
-      e.currentTarget.style.transform = "translateY(0)";
-      e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.08)";
-    }}
-  >
-    {badge && (
-      <div
-        style={{
-          position: "absolute",
-          top: "16px",
-          left: "16px",
-          backgroundColor: badge === "New" ? "#39DB4A" : "#FF6B6B",
-          color: "white",
-          padding: "6px 14px",
-          borderRadius: "20px",
-          fontSize: "12px",
-          fontWeight: "600",
-          zIndex: 2,
-        }}
-      >
-        {badge}
-      </div>
-    )}
+    },
+    menuIcon: {
+      fontSize: "48px",
+    },
+    addBtn: {
+      position: "absolute",
+      bottom: "16px",
+      right: "16px",
+      width: "36px",
+      height: "36px",
+      borderRadius: "50%",
+      border: "none",
+      background: "#5dd35d",
+      color: "white",
+      fontSize: "20px",
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: 0,
+    },
+    menuCardBody: {
+      padding: "20px",
+    },
+    menuCardTitle: {
+      margin: "0 0 6px",
+      fontSize: "18px",
+    },
+    menuCardDesc: {
+      fontSize: "14px",
+      color: "#777",
+      marginBottom: "16px",
+    },
+    menuCardFooter: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+    },
+    price: {
+      fontWeight: 600,
+      color: "#4caf50",
+    },
+  };
+};
 
-    <div
-      style={{
-        background: bg,
-        height: "200px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        position: "relative",
-      }}
-    >
-      <span style={{ fontSize: "60px" }}>{icon}</span>
-
-      <button
-        style={{
-          position: "absolute",
-          bottom: "16px",
-          right: "16px",
-          width: "44px",
-          height: "44px",
-          borderRadius: "50%",
-          border: "none",
-          backgroundColor: "#39DB4A",
-          color: "white",
-          fontSize: "24px",
-          cursor: "pointer",
-          boxShadow: "0 4px 12px rgba(57,219,74,0.3)",
-        }}
-      >
-        +
-      </button>
-    </div>
-
-    <div style={{ padding: "20px" }}>
-      <h4
-        style={{
-          fontSize: "20px",
-          fontWeight: "700",
-          marginBottom: "8px",
-        }}
-      >
-        {title}
-      </h4>
-      <p
-        style={{
-          fontSize: "14px",
-          color: "#666",
-          marginBottom: "16px",
-          lineHeight: "1.5",
-        }}
-      >
-        {desc}
-      </p>
-
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <span
-          style={{
-            color: "#39DB4A",
-            fontSize: "22px",
-            fontWeight: "700",
-          }}
-        >
-          ${price}
-        </span>
-        <span style={{ fontWeight: "600" }}>
-          ⭐ {rating}
-        </span>
-      </div>
-    </div>
-  </div>
-);
-
-/* ---------------- Section Wrapper ---------------- */
-
-const MenuSection = ({ title, count, children }) => (
-  <section style={sectionStyle}>
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "16px",
-        marginBottom: "32px",
-      }}
-    >
-      <h2 style={{ fontSize: "32px", fontWeight: "700" }}>{title}</h2>
-      <span
-        style={{
-          backgroundColor: "#f0f0f0",
-          padding: "6px 16px",
-          borderRadius: "20px",
-          fontSize: "14px",
-          color: "#666",
-        }}
-      >
-        {count}
-      </span>
-    </div>
-
-    <div style={gridStyle}>{children}</div>
-  </section>
-);
-
-/* ---------------- Sections ---------------- */
-
-const MainDishes = () => (
-  <MenuSection title="Main Dishes" count="86 dishes">
-    <DishCard bg="#e8f5e9" icon="🍜" title="Spicy Noodles" desc="Asian noodles with vegetables" price="18.00" rating="4.8" badge="New" />
-    <DishCard bg="#fff8e1" icon="🍕" title="Margherita Pizza" desc="Classic Italian pizza" price="22.00" rating="4.9" />
-    <DishCard bg="#fce4ec" icon="🍔" title="Gourmet Burger" desc="Juicy beef burger" price="19.00" rating="4.7" badge="Popular" />
-    <DishCard bg="#e8eaf6" icon="🍛" title="Chicken Curry" desc="Aromatic Indian curry" price="21.00" rating="4.6" />
-  </MenuSection>
-);
-
-const FreshSalads = () => (
-  <MenuSection title="Fresh Salads" count="32 dishes">
-    <DishCard bg="#e8f5e9" icon="🥗" title="Fattoush Salad" desc="Mediterranean salad" price="24.00" rating="4.9" />
-    <DishCard bg="#f1f8e9" icon="🥗" title="Vegetable Salad" desc="Garden fresh veggies" price="26.00" rating="4.6" />
-    <DishCard bg="#fff3e0" icon="🥗" title="Egg Vegi Salad" desc="Protein rich salad" price="23.00" rating="4.5" badge="New" />
-    <DishCard bg="#e3f2fd" icon="🥗" title="Caesar Salad" desc="Classic Caesar" price="20.00" rating="4.8" />
-  </MenuSection>
-);
-
-const Desserts = () => (
-  <MenuSection title="Sweet Desserts" count="45 desserts">
-    <DishCard bg="#fce4ec" icon="🍰" title="Chocolate Cake" desc="Rich chocolate cake" price="15.00" rating="4.9" badge="Popular" />
-    <DishCard bg="#fff9e6" icon="🍨" title="Ice Cream" desc="Creamy vanilla ice cream" price="12.00" rating="4.7" />
-    <DishCard bg="#f3e5f5" icon="🧁" title="Cupcake" desc="Soft cupcake" price="8.00" rating="4.8" />
-    <DishCard bg="#ffebee" icon="🍮" title="Caramel Pudding" desc="Smooth caramel pudding" price="10.00" rating="4.6" badge="New" />
-  </MenuSection>
-);
-
-/* ---------------- Hero + Filter ---------------- */
-
-const MenuHero = () => (
-  <section style={{ padding: "64px 0", background: "#f8fff9" }}>
-    <div style={containerStyle}>
-      <h1 style={{ fontSize: "48px", textAlign: "center", marginBottom: "16px" }}>
-        Our Menu
-      </h1>
-      <p style={{ textAlign: "center", maxWidth: "600px", margin: "0 auto", color: "#666" }}>
-        Explore our delicious selection of dishes crafted with passion
-      </p>
-    </div>
-  </section>
-);
-
-const FilterSection = () => {
-  const [active, setActive] = useState("All");
-  const filters = ["All", "Main Dish", "Breakfast", "Dessert", "Beverages", "Salads"];
+export default function MenuComponents() {
+  const styles = useStyles();
+  
+  const sections = [
+    {
+      title: "Main Dishes",
+      count: "86 dishes",
+      items: [
+        {
+          name: "Spicy Noodles",
+          desc: "Delicious Asian-style noodles with a spicy kick.",
+          price: "$18.00",
+          rating: 4.8,
+          icon: "🍜",
+          bg: "#EAF7EA",
+        },
+        {
+          name: "Margherita Pizza",
+          desc: "Classic Italian pizza with fresh mozzarella.",
+          price: "$22.00",
+          rating: 4.9,
+          icon: "🍕",
+          bg: "#FFF6DD",
+        },
+        {
+          name: "Gourmet Burger",
+          desc: "Juicy beef patty with premium toppings.",
+          price: "$19.00",
+          rating: 4.7,
+          icon: "🍔",
+          bg: "#FBEAF0",
+        },
+        {
+          name: "Chicken Curry",
+          desc: "Aromatic curry with tender chicken.",
+          price: "$21.00",
+          rating: 4.6,
+          icon: "🍛",
+          bg: "#EEF0FA",
+        },
+      ],
+    },
+    {
+      title: "Fresh Salads",
+      count: "32 dishes",
+      items: [
+        {
+          name: "Fattoush Salad",
+          desc: "Mediterranean salad with crispy pita.",
+          price: "$24.00",
+          rating: 4.9,
+          icon: "🥗",
+          bg: "#EAF7EA",
+        },
+        {
+          name: "Vegetable Salad",
+          desc: "Fresh garden vegetables with house vinaigrette.",
+          price: "$26.00",
+          rating: 4.6,
+          icon: "🥗",
+          bg: "#F2F8E9",
+        },
+        {
+          name: "Egg Vegi Salad",
+          desc: "Protein-rich salad with boiled eggs.",
+          price: "$23.00",
+          rating: 4.5,
+          icon: "🥗",
+          bg: "#FFF4E0",
+        },
+        {
+          name: "Caesar Salad",
+          desc: "Classic Caesar with parmesan and croutons.",
+          price: "$20.00",
+          rating: 4.8,
+          icon: "🥗",
+          bg: "#E8F4FF",
+        },
+      ],
+    },
+    {
+      title: "Sweet Desserts",
+      count: "45 desserts",
+      items: [
+        {
+          name: "Chocolate Cake",
+          desc: "Rich chocolate cake with creamy frosting.",
+          price: "$15.00",
+          rating: 4.9,
+          icon: "🍰",
+          bg: "#FBEAF0",
+        },
+        {
+          name: "Ice Cream",
+          desc: "Creamy vanilla ice cream with toppings.",
+          price: "$12.00",
+          rating: 4.7,
+          icon: "🍨",
+          bg: "#FFF6DD",
+        },
+        {
+          name: "Cupcake",
+          desc: "Delicious cupcake with buttercream frosting.",
+          price: "$8.00",
+          rating: 4.8,
+          icon: "🧁",
+          bg: "#F3EAF7",
+        },
+        {
+          name: "Caramel Pudding",
+          desc: "Smooth caramel pudding with whipped cream.",
+          price: "$10.00",
+          rating: 4.6,
+          icon: "🍮",
+          bg: "#FDECEC",
+        },
+      ],
+    },
+  ];
 
   return (
-    <section style={{ padding: "40px 0" }}>
-      <div style={{ ...containerStyle, display: "flex", justifyContent: "center", gap: "16px", flexWrap: "wrap" }}>
-        {filters.map((f) => (
-          <button
-            key={f}
-            onClick={() => setActive(f)}
-            style={{
-              padding: "12px 32px",
-              borderRadius: "25px",
-              fontWeight: "600",
-              border: active === f ? "none" : "2px solid #e8e8e8",
-              backgroundColor: active === f ? "#39DB4A" : "white",
-              color: active === f ? "white" : "#333",
-              cursor: "pointer",
-            }}
-          >
-            {f}
-          </button>
+    <section style={styles.menuWrapper}>
+      <div style={styles.menuInner}>
+        <h1 style={styles.menuTitle}>Our Menu</h1>
+        <p style={styles.menuSubtitle}>
+          Explore our delicious selection of dishes crafted with passion
+        </p>
+
+        <div style={styles.categoryBar}>
+          <div style={styles.categoryPillActive}>All</div>
+          <div style={styles.categoryPill}>Main Dish</div>
+          <div style={styles.categoryPill}>Breakfast</div>
+          <div style={styles.categoryPill}>Dessert</div>
+          <div style={styles.categoryPill}>Beverages</div>
+          <div style={styles.categoryPill}>Salads</div>
+        </div>
+
+        {sections.map((section, idx) => (
+          <div key={idx}>
+            <div style={styles.sectionHeader}>
+              <h2 style={styles.sectionHeaderTitle}>{section.title}</h2>
+              <span style={styles.sectionHeaderCount}>{section.count}</span>
+            </div>
+
+            <div style={styles.menuGrid}>
+              {section.items.map((item, i) => (
+                <div style={styles.menuCard} key={i}>
+                  <div
+                    style={{
+                      ...styles.menuCardTop,
+                      backgroundColor: item.bg,
+                    }}
+                  >
+                    <span style={styles.menuIcon}>{item.icon}</span>
+                    <button style={styles.addBtn}>+</button>
+                  </div>
+
+                  <div style={styles.menuCardBody}>
+                    <h3 style={styles.menuCardTitle}>{item.name}</h3>
+                    <p style={styles.menuCardDesc}>{item.desc}</p>
+
+                    <div style={styles.menuCardFooter}>
+                      <span style={styles.price}>{item.price}</span>
+                      <span>⭐ {item.rating}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         ))}
       </div>
     </section>
-  );
-};
-
-/* ---------------- Page ---------------- */
-
-export default function MenuPage() {
-  return (
-    <div>
-      <MenuHero />
-      <FilterSection />
-      <main style={{ padding: "40px 0" }}>
-        <div style={containerStyle}>
-          <MainDishes />
-          <FreshSalads />
-          <Desserts />
-        </div>
-      </main>
-    </div>
   );
 }
