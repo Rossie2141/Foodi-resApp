@@ -1,9 +1,9 @@
 import React from "react";
 import StarIcon from "@mui/icons-material/Star";
 
-import ChefImg from "../assets/Mask group.jpg"; // use your chef image
-import User1 from "../assets/Mask group (1).jpg";
-import User2 from "../assets/Mask group (2).jpg";
+import ChefImg from "../../../assets/Mask group.jpg"; // use your chef image
+import User1 from "./../../assets/Mask group (1).jpg";
+import User2 from "./../../assets/Mask group (2).jpg";
 
 const Testimonials = () => {
   return (

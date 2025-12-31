@@ -1,8 +1,9 @@
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 
-import Home from "./components/Home";
-import MenuPage from "./components/MenuComponents";
+import Home from "./components/Pages/Home/Home";
+import MenuPage from "./components/Pages/Menu/MenuComponents";
+import ServicePage from "./components/Pages/Services/ServicePage";
 
 import { Routes, Route, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -29,7 +30,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/menu" element={<MenuPage/>} />
-        <Route path="/services" element={<h1>Hello Services</h1>} />
+        <Route path="/services" element={<ServicePage/>} />
         <Route path="/offers" element={<h1>Hello Offers</h1>} />
       </Routes>
 
