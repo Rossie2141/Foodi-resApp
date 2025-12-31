@@ -64,7 +64,7 @@ const CustomerReviews = () => {
         <ReviewCard
           initials="EM"
           name="Emma Rodriguez"
-          text="Foodi never disappoints. Best food delivery app!"
+          text="Poodi never disappoints. Best food delivery app!"
         />
       </div>
     </section>

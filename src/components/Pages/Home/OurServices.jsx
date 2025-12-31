@@ -23,7 +23,7 @@ const services = [
   {
     icon: <CardGiftcardIcon />,
     title: "GIFT CARDS",
-    desc: "Give the gift of exceptional dining with Foodi Gift Cards",
+    desc: "Give the gift of exceptional dining with Poodi Gift Cards",
   },
 ];
 

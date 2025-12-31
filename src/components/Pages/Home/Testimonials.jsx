@@ -2,8 +2,8 @@ import React from "react";
 import StarIcon from "@mui/icons-material/Star";
 
 import ChefImg from "../../../assets/Mask group.jpg"; // use your chef image
-import User1 from "./../../assets/Mask group (1).jpg";
-import User2 from "./../../assets/Mask group (2).jpg";
+import User1 from "../../../assets/Mask group (1).jpg";
+import User2 from "../../../assets/Mask group (2).jpg";
 
 const Testimonials = () => {
   return (
@@ -31,7 +31,7 @@ const Testimonials = () => {
           </h2>
 
           <p style={styles.text}>
-            “I had the pleasure of dining at Foodi last night, and I'm still
+            “I had the pleasure of dining at Poodi last night, and I'm still
             raving about the experience! The attention to detail in presentation
             and service was impeccable.”
           </p>

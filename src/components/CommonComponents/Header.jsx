@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setActivePage } from "../redux/slices/navigationSlice";
+import { setActivePage } from "../../redux/slices/navigationSlice";
 
 import SearchIcon from "@mui/icons-material/Search";
 import WorkOutlineIcon from "@mui/icons-material/WorkOutline";

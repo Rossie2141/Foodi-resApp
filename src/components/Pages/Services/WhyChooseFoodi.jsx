@@ -15,7 +15,7 @@ const WhyChooseFoodi = () => {
       >
         <div>
           <h2 style={{ fontSize: 32, fontWeight: 800, marginBottom: 16 }}>
-            Why Choose Foodi?
+            Why Choose Poodi?
           </h2>
 
           <ul style={{ paddingLeft: 0, listStyle: "none", color: "#555" }}>

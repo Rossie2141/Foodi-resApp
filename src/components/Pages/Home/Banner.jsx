@@ -1,8 +1,8 @@
 import React from 'react';
-import MainFoodImg from "../assets/MainFoodImg.jpg";
-import SpicyNoodlesImg from '../assets/SpicyNoodlesImg.jpg'
+// import MainFoodImg from "../assets/MainFoodImg.jpg";
+import SpicyNoodlesImg from '../../../assets/SpicyNoodlesImg.jpg'
 import PlayCircleFilledRoundedIcon from '@mui/icons-material/PlayCircleFilledRounded';
-import Lady from '../assets/Intersect.jpg'
+import Lady from '../../../assets/Intersect.jpg'
 
 const Banner = () => {
   const styles = {

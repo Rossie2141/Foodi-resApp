@@ -4,9 +4,9 @@ import StarIcon from "@mui/icons-material/Star";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
-import Dish1 from "../assets/Egg salad.jpg";
-import Dish2 from "../assets/Fattoush salad.jpg";
-import Dish3 from "../assets/Vegetable salad.jpg";
+import Dish1 from "../../../assets/Egg salad.jpg";
+import Dish2 from "../../../assets/Fattoush salad.jpg";
+import Dish3 from "../../../assets/Vegetable salad.jpg";
 
 const dishes = [
   {
