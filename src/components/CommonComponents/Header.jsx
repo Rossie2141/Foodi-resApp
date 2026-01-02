@@ -223,7 +223,7 @@ const Header = () => {
           </button>
 
           <div style={useStyles.cart}>
-            <WorkOutlineIcon />
+            <WorkOutlineIcon  onClick={()=> handleNav("cart", "/cart")}/>
             <span style={useStyles.cartBadge}>8</span>
           </div>
 

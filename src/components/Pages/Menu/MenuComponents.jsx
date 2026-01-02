@@ -2,14 +2,10 @@ import React, { useEffect, useState, useRef } from "react";
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
-/* =========================
-   CONFIG
-========================= */
+
 const API_BASE_URL = "https://foddie-res-app-backend.vercel.app";
 
-/* =========================
-   STYLES
-========================= */
+
 const useStyles = () => ({
   menuWrapper: {
     width: "100%",

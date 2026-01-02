@@ -1,15 +1,17 @@
-import Header from "./components/CommonComponents/Header";
-import Footer from "./components/CommonComponents/Footer";
-
-import Home from "./components/Pages/Home/Home";
-import MenuPage from "./components/Pages/Menu/MenuComponents";
-import ServicePage from "./components/Pages/Services/ServicePage";
-import OfferPage from "./components/Pages/Offers/OffersPage";
-
 import { Routes, Route, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import { setActivePage } from "./redux/slices/navigationSlice";
+
+import Header from "./components/CommonComponents/Header";
+import Footer from "./components/CommonComponents/Footer";
+import CartPage from "./components/Pages/Cart/CartPage";
+
+
+const Home = lazy(() => import("./components/Pages/Home/Home"));
+const MenuPage = lazy(() => import("./components/Pages/Menu/MenuComponents"));
+const ServicePage = lazy(() => import("./components/Pages/Services/ServicePage"));
+const OfferPage = lazy(() => import("./components/Pages/Offers/OffersPage"));
 
 const App = () => {
   const location = useLocation();
@@ -28,12 +30,31 @@ const App = () => {
     <>
       <Header />
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/menu" element={<MenuPage/>} />
-        <Route path="/services" element={<ServicePage/>} />
-        <Route path="/offers" element={<OfferPage/>} />
-      </Routes>
+      {/* Suspense wraps only what is lazy-loaded */}
+      <Suspense
+        fallback={
+          <div
+            style={{
+              minHeight: "60vh",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "18px",
+              fontWeight: 500,
+            }}
+          >
+            Loading page...
+          </div>
+        }
+      >
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/menu" element={<MenuPage />} />
+          <Route path="/services" element={<ServicePage />} />
+          <Route path="/offers" element={<OfferPage />} />
+          <Route path="/cart" element={<CartPage />} />
+        </Routes>
+      </Suspense>
 
       <Footer />
     </>
