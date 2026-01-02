@@ -5,7 +5,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 /* =========================
    CONFIG
 ========================= */
-const API_BASE_URL = "https://poddiebackend.vercel.app";
+const API_BASE_URL = "https://foddie-res-app-backend.vercel.app";
 
 /* =========================
    STYLES
