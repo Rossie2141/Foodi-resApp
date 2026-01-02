@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { setActivePage } from "../../../redux/slices/navigationSlice";
 
 // --- Components ---
 
-// Cart Hero Component
 export const CartHero = () => (
   <section style={{
     background: 'linear-gradient(135deg, #f8fff9 0%, #ffffff 100%)',
@@ -11,9 +13,8 @@ export const CartHero = () => (
   }}>
     <h1 style={{
       fontSize: '48px',
-      marginBottom: '15px',
-      color: '#1a1a1a',
-      margin: '0 0 15px 0'
+      margin: '0 0 15px 0',
+      color: '#1a1a1a'
     }}>Shopping Cart</h1>
     <p style={{
       fontSize: '18px',
@@ -22,7 +23,6 @@ export const CartHero = () => (
   </section>
 );
 
-// Cart Item Component
 export const CartItem = ({ item, onUpdateQuantity, onRemove }) => (
   <div style={{
     display: 'grid',
@@ -188,8 +188,7 @@ export const CartItem = ({ item, onUpdateQuantity, onRemove }) => (
   </div>
 );
 
-// Cart Items List Component
-export const CartItemsList = ({ items, onUpdateQuantity, onRemove }) => (
+export const CartItemsList = ({ items, onUpdateQuantity, onRemove, onContinueShopping }) => (
   <div style={{
     background: 'white',
     borderRadius: '24px',
@@ -234,26 +233,33 @@ export const CartItemsList = ({ items, onUpdateQuantity, onRemove }) => (
 
     <div style={{
       marginTop: '20px',
-      textAlign: 'center'
+      textAlign: 'center',
     }}>
-      <a href="#" style={{
-        color: '#39DB4A',
-        textDecoration: 'none',
-        fontWeight: '600',
-        fontSize: '15px'
-      }}>← Continue Shopping</a>
+      <button
+        type="button"
+        style={{
+          background: 'none',
+          border: 'none',
+          color: '#39DB4A',
+          fontWeight: '600',
+          fontSize: '15px',
+          cursor: 'pointer',
+        }}
+        onClick={onContinueShopping}
+      >
+        ← Continue Shopping
+      </button>
     </div>
   </div>
 );
 
-// Promo Code Component (UPDATED with Remove logic)
 export const PromoCode = ({ promoCode, onApplyPromo, onRemovePromo }) => {
   const [code, setCode] = useState('');
 
   const handleApply = () => {
     if (code.trim()) {
       onApplyPromo(code);
-      setCode(''); // Reset input
+      setCode('');
     }
   };
 
@@ -265,8 +271,7 @@ export const PromoCode = ({ promoCode, onApplyPromo, onRemovePromo }) => {
         marginBottom: '10px',
         display: 'block'
       }}>Have a promo code?</label>
-      
-      {/* Show input only if NO promo is applied */}
+
       {!promoCode ? (
         <div style={{ display: 'flex', gap: '10px' }}>
           <input 
@@ -300,7 +305,6 @@ export const PromoCode = ({ promoCode, onApplyPromo, onRemovePromo }) => {
           </button>
         </div>
       ) : (
-        /* Show the applied code message with a Remove button */
         <div style={{
           background: '#e8f5e9',
           color: '#2e7d32',
@@ -335,7 +339,6 @@ export const PromoCode = ({ promoCode, onApplyPromo, onRemovePromo }) => {
   );
 };
 
-// Order Summary Component
 export const OrderSummary = ({ 
   subtotal, discount, deliveryFee, tax, total, 
   promoCode, onApplyPromo, onRemovePromo, onCheckout 
@@ -426,9 +429,10 @@ export const OrderSummary = ({
   </div>
 );
 
-// --- Main Page ---
-
 export default function CartPage() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [cartItems, setCartItems] = useState([
     { id: 1, name: 'Spicy Noodles', description: 'Asian noodles', price: 18.00, quantity: 2, icon: '🍜', gradient: 'linear-gradient(135deg, #e8f5e9, #c8e6c9)' },
     { id: 2, name: 'Margherita Pizza', description: 'Fresh mozzarella', price: 22.00, quantity: 1, icon: '🍕', gradient: 'linear-gradient(135deg, #fff8e1, #ffecb3)' },
@@ -457,12 +461,16 @@ export default function CartPage() {
     }
   };
 
-  // NEW: Handler to remove promo
   const handleRemovePromo = () => {
     setPromoCode(null);
   };
 
   const handleCheckout = () => alert('Proceeding to checkout...');
+
+  const handleNav = (page, path) => {
+    dispatch(setActivePage(page));
+    navigate(path);
+  };
 
   // --- Calculations ---
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -492,6 +500,7 @@ export default function CartPage() {
           items={cartItems}
           onUpdateQuantity={handleUpdateQuantity}
           onRemove={handleRemoveItem}
+          onContinueShopping={() => handleNav("menu", "/menu")}
         />
         
         <OrderSummary 
