@@ -1,243 +1,228 @@
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
-const useStyles = () => {
-  return {
-    menuWrapper: {
-      width: "100%",
-      background: "#fff",
-      padding: "24px 0",
-    },
-    menuInner: {
-      maxWidth: "1400px",
-      margin: "0 auto",
-      padding: "0 32px",
-    },
-    menuTitle: {
-      fontSize: "36px",
-      fontWeight: 700,
-      textAlign: "center",
-      marginTop: "48px",
-    },
-    menuSubtitle: {
-      textAlign: "center",
-      color: "#666",
-      margin: "12px 0 64px",
-    },
-    categoryBar: {
-      display: "flex",
-      justifyContent: "center",
-      gap: "20px",
-      marginBottom: "64px",
-      flexWrap: "wrap",
-    },
-    categoryPill: {
-      padding: "14px 28px",
-      borderRadius: "999px",
-      border: "2px solid #e6e6e6",
-      background: "#fff",
-      fontWeight: 600,
-      color: "#333",
-    },
-    categoryPillActive: {
-      padding: "14px 28px",
-      borderRadius: "999px",
-      border: "2px solid #6fdc5c",
-      background: "#6fdc5c",
-      fontWeight: 600,
-      color: "#fff",
-    },
-    sectionHeader: {
-      margin: "48px 0 24px",
-    },
-    sectionHeaderTitle: {
-      margin: 0,
-      fontSize: "28px",
-    },
-    sectionHeaderCount: {
-      fontSize: "14px",
-      color: "#777",
-    },
-    menuGrid: {
-      display: "grid",
-      gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-      gap: "28px",
-    },
-    menuCard: {
-      background: "white",
-      borderRadius: "24px",
-      boxShadow: "0 8px 30px rgba(0, 0, 0, 0.06)",
-      overflow: "hidden",
-    },
-    menuCardTop: {
-      height: "160px",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      position: "relative",
-    },
-    menuIcon: {
-      fontSize: "48px",
-    },
-    addBtn: {
-      position: "absolute",
-      bottom: "16px",
-      right: "16px",
-      width: "36px",
-      height: "36px",
-      borderRadius: "50%",
-      border: "none",
-      background: "#5dd35d",
-      color: "white",
-      fontSize: "20px",
-      cursor: "pointer",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: 0,
-    },
-    menuCardBody: {
-      padding: "20px",
-    },
-    menuCardTitle: {
-      margin: "0 0 6px",
-      fontSize: "18px",
-    },
-    menuCardDesc: {
-      fontSize: "14px",
-      color: "#777",
-      marginBottom: "16px",
-    },
-    menuCardFooter: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-    },
-    price: {
-      fontWeight: 600,
-      color: "#4caf50",
-    },
-  };
+/* =========================
+   CONFIG
+========================= */
+const API_BASE_URL = "https://poddiebackend.vercel.app";
+
+/* =========================
+   STYLES
+========================= */
+const useStyles = () => ({
+  menuWrapper: {
+    width: "100%",
+    background: "#fff",
+    padding: "24px 0",
+  },
+  menuInner: {
+    maxWidth: "1400px",
+    margin: "0 auto",
+    padding: "0 32px",
+  },
+  menuTitle: {
+    fontSize: "36px",
+    fontWeight: 700,
+    textAlign: "center",
+    marginTop: "48px",
+  },
+  menuSubtitle: {
+    textAlign: "center",
+    color: "#666",
+    margin: "12px 0 64px",
+  },
+  categoryBar: {
+    display: "flex",
+    justifyContent: "center",
+    gap: "20px",
+    marginBottom: "64px",
+    flexWrap: "wrap",
+  },
+  categoryPill: {
+    padding: "14px 28px",
+    borderRadius: "999px",
+    border: "2px solid #e6e6e6",
+    background: "#fff",
+    fontWeight: 600,
+    color: "#333",
+    cursor: "pointer",
+  },
+  categoryPillActive: {
+    padding: "14px 28px",
+    borderRadius: "999px",
+    border: "2px solid #6fdc5c",
+    background: "#6fdc5c",
+    fontWeight: 600,
+    color: "#fff",
+    cursor: "pointer",
+  },
+  sectionHeader: {
+    margin: "48px 0 24px",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  sectionHeaderLeft: {
+    display: "flex",
+    flexDirection: "column",
+  },
+  sectionHeaderTitle: {
+    margin: 0,
+    fontSize: "28px",
+  },
+  sectionHeaderCount: {
+    fontSize: "14px",
+    color: "#777",
+  },
+  scrollContainer: {
+    position: "relative",
+  },
+  menuScroll: {
+    display: "flex",
+    gap: "28px",
+    overflowX: "auto",
+    scrollBehavior: "smooth",
+    scrollbarWidth: "none",
+    msOverflowStyle: "none",
+    WebkitOverflowScrolling: "touch",
+  },
+  menuCard: {
+    background: "white",
+    borderRadius: "24px",
+    boxShadow: "0 8px 30px rgba(0,0,0,0.06)",
+    overflow: "hidden",
+    minWidth: "280px",
+    flexShrink: 0,
+  },
+  menuCardTop: {
+    height: "160px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    position: "relative",
+  },
+  menuIcon: {
+    fontSize: "48px",
+  },
+  addBtn: {
+    position: "absolute",
+    bottom: "16px",
+    right: "16px",
+    width: "36px",
+    height: "36px",
+    borderRadius: "50%",
+    border: "none",
+    background: "#5dd35d",
+    color: "white",
+    fontSize: "20px",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  menuCardBody: {
+    padding: "20px",
+  },
+  menuCardTitle: {
+    margin: "0 0 6px",
+    fontSize: "18px",
+  },
+  menuCardDesc: {
+    fontSize: "14px",
+    color: "#777",
+    marginBottom: "16px",
+  },
+  menuCardFooter: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  price: {
+    fontWeight: 600,
+    color: "#4caf50",
+  },
+  arrowBtn: {
+    width: "44px",
+    height: "44px",
+    borderRadius: "50%",
+    border: "none",
+    background: "#6fdc5c",
+    boxShadow: "0 4px 16px rgba(111, 220, 92, 0.3)",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "18px",
+    fontWeight: "bold",
+    color: "white",
+    transition: "all 0.3s ease",
+  },
+  arrowContainer: {
+    display: "flex",
+    gap: "12px",
+  },
+
+});
+
+/* =========================
+   CATEGORY META
+========================= */
+const CATEGORY_META = {
+  main: { title: "Main Dishes", bg: "#EAF7EA" },
+  salad: { title: "Fresh Salads", bg: "#F2F8E9" },
+  dessert: { title: "Sweet Desserts", bg: "#FBEAF0" },
+  beverage: { title: "Beverages", bg: "#E8F4FF" },
 };
 
+/* =========================
+   COMPONENT
+========================= */
 export default function MenuComponents() {
   const styles = useStyles();
-  
-  const sections = [
-    {
-      title: "Main Dishes",
-      count: "86 dishes",
-      items: [
-        {
-          name: "Spicy Noodles",
-          desc: "Delicious Asian-style noodles with a spicy kick.",
-          price: "$18.00",
-          rating: 4.8,
-          icon: "🍜",
-          bg: "#EAF7EA",
-        },
-        {
-          name: "Margherita Pizza",
-          desc: "Classic Italian pizza with fresh mozzarella.",
-          price: "$22.00",
-          rating: 4.9,
-          icon: "🍕",
-          bg: "#FFF6DD",
-        },
-        {
-          name: "Gourmet Burger",
-          desc: "Juicy beef patty with premium toppings.",
-          price: "$19.00",
-          rating: 4.7,
-          icon: "🍔",
-          bg: "#FBEAF0",
-        },
-        {
-          name: "Chicken Curry",
-          desc: "Aromatic curry with tender chicken.",
-          price: "$21.00",
-          rating: 4.6,
-          icon: "🍛",
-          bg: "#EEF0FA",
-        },
-      ],
-    },
-    {
-      title: "Fresh Salads",
-      count: "32 dishes",
-      items: [
-        {
-          name: "Fattoush Salad",
-          desc: "Mediterranean salad with crispy pita.",
-          price: "$24.00",
-          rating: 4.9,
-          icon: "🥗",
-          bg: "#EAF7EA",
-        },
-        {
-          name: "Vegetable Salad",
-          desc: "Fresh garden vegetables with house vinaigrette.",
-          price: "$26.00",
-          rating: 4.6,
-          icon: "🥗",
-          bg: "#F2F8E9",
-        },
-        {
-          name: "Egg Vegi Salad",
-          desc: "Protein-rich salad with boiled eggs.",
-          price: "$23.00",
-          rating: 4.5,
-          icon: "🥗",
-          bg: "#FFF4E0",
-        },
-        {
-          name: "Caesar Salad",
-          desc: "Classic Caesar with parmesan and croutons.",
-          price: "$20.00",
-          rating: 4.8,
-          icon: "🥗",
-          bg: "#E8F4FF",
-        },
-      ],
-    },
-    {
-      title: "Sweet Desserts",
-      count: "45 desserts",
-      items: [
-        {
-          name: "Chocolate Cake",
-          desc: "Rich chocolate cake with creamy frosting.",
-          price: "$15.00",
-          rating: 4.9,
-          icon: "🍰",
-          bg: "#FBEAF0",
-        },
-        {
-          name: "Ice Cream",
-          desc: "Creamy vanilla ice cream with toppings.",
-          price: "$12.00",
-          rating: 4.7,
-          icon: "🍨",
-          bg: "#FFF6DD",
-        },
-        {
-          name: "Cupcake",
-          desc: "Delicious cupcake with buttercream frosting.",
-          price: "$8.00",
-          rating: 4.8,
-          icon: "🧁",
-          bg: "#F3EAF7",
-        },
-        {
-          name: "Caramel Pudding",
-          desc: "Smooth caramel pudding with whipped cream.",
-          price: "$10.00",
-          rating: 4.6,
-          icon: "🍮",
-          bg: "#FDECEC",
-        },
-      ],
-    },
-  ];
+
+  const [dishes, setDishes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const scrollRefs = useRef({});
+
+  /* Fetch dishes */
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/dishes/`)
+      .then((res) => res.json())
+      .then((data) => {
+        setDishes(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Failed to load dishes:", err);
+        setLoading(false);
+      });
+  }, []);
+
+  /* Group by category */
+  const groupedDishes = dishes.reduce((acc, dish) => {
+    const key = dish.category || "other";
+    acc[key] = acc[key] || [];
+    acc[key].push(dish);
+    return acc;
+  }, {});
+
+  /* Scroll function */
+  const scroll = (category, direction) => {
+    const container = scrollRefs.current[category];
+    if (container) {
+      const scrollAmount = 320;
+      container.scrollLeft += direction === "left" ? -scrollAmount : scrollAmount;
+    }
+  };
+
+  if (loading) {
+    return (
+      <p style={{ textAlign: "center", padding: "100px", fontSize: "18px" }}>
+        Loading menu...
+      </p>
+    );
+  }
 
   return (
     <section style={styles.menuWrapper}>
@@ -247,6 +232,7 @@ export default function MenuComponents() {
           Explore our delicious selection of dishes crafted with passion
         </p>
 
+        {/* CATEGORY PILLS */}
         <div style={styles.categoryBar}>
           <div style={styles.categoryPillActive}>All</div>
           <div style={styles.categoryPill}>Main Dish</div>
@@ -256,41 +242,104 @@ export default function MenuComponents() {
           <div style={styles.categoryPill}>Salads</div>
         </div>
 
-        {sections.map((section, idx) => (
-          <div key={idx}>
-            <div style={styles.sectionHeader}>
-              <h2 style={styles.sectionHeaderTitle}>{section.title}</h2>
-              <span style={styles.sectionHeaderCount}>{section.count}</span>
-            </div>
+        {/* MENU SECTIONS */}
+        {Object.entries(groupedDishes).map(([category, items]) => {
+          const meta = CATEGORY_META[category] || {
+            title: category,
+            bg: "#F5F5F5",
+          };
 
-            <div style={styles.menuGrid}>
-              {section.items.map((item, i) => (
-                <div style={styles.menuCard} key={i}>
-                  <div
-                    style={{
-                      ...styles.menuCardTop,
-                      backgroundColor: item.bg,
-                    }}
-                  >
-                    <span style={styles.menuIcon}>{item.icon}</span>
-                    <button style={styles.addBtn}>+</button>
-                  </div>
-
-                  <div style={styles.menuCardBody}>
-                    <h3 style={styles.menuCardTitle}>{item.name}</h3>
-                    <p style={styles.menuCardDesc}>{item.desc}</p>
-
-                    <div style={styles.menuCardFooter}>
-                      <span style={styles.price}>{item.price}</span>
-                      <span>⭐ {item.rating}</span>
-                    </div>
-                  </div>
+          return (
+            <div key={category}>
+              <div style={styles.sectionHeader}>
+                <div style={styles.sectionHeaderLeft}>
+                  <h2 style={styles.sectionHeaderTitle}>{meta.title}</h2>
+                  <span style={styles.sectionHeaderCount}>
+                    {items.length} dishes
+                  </span>
                 </div>
-              ))}
+
+                {/* Arrow buttons on the right - only show if more than 4 items */}
+                {items.length > 4 && (
+                  <div style={styles.arrowContainer}>
+                    <button
+                      style={styles.arrowBtn}
+                      onClick={() => scroll(category, "left")}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = "scale(1.1)";
+                        e.currentTarget.style.background = "#5dd35d";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = "scale(1)";
+                        e.currentTarget.style.background = "#6fdc5c";
+                      }}
+                    >
+                      <ArrowBackIosNewIcon sx={{ fontSize: 18 }} />
+                    </button>
+                    <button
+                      style={styles.arrowBtn}
+                      onClick={() => scroll(category, "right")}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = "scale(1.1)";
+                        e.currentTarget.style.background = "#5dd35d";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = "scale(1)";
+                        e.currentTarget.style.background = "#6fdc5c";
+                      }}
+                    >
+                      <ArrowForwardIosIcon sx={{ fontSize: 18 }} />
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div style={styles.scrollContainer}>
+                {/* Scrollable Cards */}
+                <div
+                  style={styles.menuScroll}
+                  ref={(el) => (scrollRefs.current[category] = el)}
+                >
+                  {items.map((item) => (
+                    <div style={styles.menuCard} key={item.id}>
+                      <div
+                        style={{
+                          ...styles.menuCardTop,
+                          backgroundColor: meta.bg,
+                        }}
+                      >
+                        <span style={styles.menuIcon}>🍽️</span>
+                        <button style={styles.addBtn}>+</button>
+                      </div>
+
+                      <div style={styles.menuCardBody}>
+                        <h3 style={styles.menuCardTitle}>{item.name}</h3>
+                        <p style={styles.menuCardDesc}>
+                          {item.description || "Deliciously prepared dish"}
+                        </p>
+
+                        <div style={styles.menuCardFooter}>
+                          <span style={styles.price}>
+                            ${item.price.toFixed(2)}
+                          </span>
+                          {item.rating && <span>⭐ {item.rating}</span>}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
+
+      {/* Hide scrollbar */}
+      <style>{`
+        div[style*="overflowX: auto"]::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
     </section>
   );
 }
