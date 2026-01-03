@@ -1,4 +1,5 @@
 import { Routes, Route, useLocation } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { useEffect, lazy, Suspense } from "react";
 import { setActivePage } from "./redux/slices/navigationSlice";
@@ -29,7 +30,19 @@ const App = () => {
 
   return (
     <>
+
       <Header />
+
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 2000,
+          style: {
+            borderRadius: "12px",
+            fontWeight: "600",
+          },
+        }}
+      />
 
       {/* Suspense wraps only what is lazy-loaded */}
       <Suspense

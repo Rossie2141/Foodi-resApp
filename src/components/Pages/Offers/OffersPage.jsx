@@ -11,7 +11,7 @@ const OffersPage = () => {
     <>
       <OffersHero />
       <DealOfTheDay />
-      <OffersTabs />
+      {/* <OffersTabs /> */}
       <ActiveOffers />
       <ComboDeals />
       <Newsletter />

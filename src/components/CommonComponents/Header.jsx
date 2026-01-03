@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setActivePage } from "../../redux/slices/navigationSlice";
 
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import SearchIcon from "@mui/icons-material/Search";
 import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
 import CallOutlinedIcon from "@mui/icons-material/CallOutlined";
@@ -218,9 +219,9 @@ const Header = () => {
 
         {/* Right */}
         <div style={useStyles.headerActions}>
-          {/* <button style={useStyles.iconBtn}>
-            <SearchIcon />
-          </button> */}
+          <button style={useStyles.iconBtn}>
+            <AccountCircleOutlinedIcon />
+          </button>
 
           <div style={useStyles.cart}>
             <WorkOutlineIcon  onClick={()=> handleNav("cart", "/cart")}/>
