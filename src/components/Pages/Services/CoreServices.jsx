@@ -34,7 +34,7 @@ const ServiceCard = ({ icon, title, desc }) => (
       {desc}
     </p>
 
-    <button
+    {/* <button
       style={{
         marginTop: 16,
         padding: "8px 20px",
@@ -47,7 +47,7 @@ const ServiceCard = ({ icon, title, desc }) => (
       }}
     >
       Learn More
-    </button>
+    </button> */}
   </div>
 );
 

@@ -218,16 +218,16 @@ const Header = () => {
 
         {/* Right */}
         <div style={useStyles.headerActions}>
-          <button style={useStyles.iconBtn}>
+          {/* <button style={useStyles.iconBtn}>
             <SearchIcon />
-          </button>
+          </button> */}
 
           <div style={useStyles.cart}>
             <WorkOutlineIcon  onClick={()=> handleNav("cart", "/cart")}/>
             {/* <span style={useStyles.cartBadge}>8</span> */}
           </div>
 
-          <button style={useStyles.contactBtn}>
+          <button style={useStyles.contactBtn} onClick={()=>handleNav("contact","/contact")}>
             <CallOutlinedIcon /> Contact
           </button>
 

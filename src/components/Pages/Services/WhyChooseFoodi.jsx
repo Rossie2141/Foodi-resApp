@@ -1,6 +1,22 @@
 import React from "react";
 
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { setActivePage } from "../../../redux/slices/navigationSlice";
+
 const WhyChooseFoodi = () => {
+
+  const dispatch = useDispatch();
+      const navigate = useNavigate();
+      const activePage = useSelector((state) => state.navigation.activePage);
+    
+      const handleNav = (page, path) => {
+        dispatch(setActivePage(page));
+        navigate(path);
+        setMobileMenuOpen(false);
+      };
+
+
   return (
     <section style={{ padding: "80px 20px" }}>
       <div
@@ -43,6 +59,7 @@ const WhyChooseFoodi = () => {
               fontWeight: 600,
               cursor: "pointer",
             }}
+            onClick={()=>handleNav("menu","/menu")}
           >
             Start Your Order
           </button>

@@ -6,7 +6,7 @@ const ServicesHero = () => {
       style={{
         padding: "100px 20px 80px",
         textAlign: "center",
-        background: "#fff",
+        background:'linear-gradient(135deg, #f8fff9 0%, #ffffff 100%)',
       }}
     >
       <h1 style={{ fontSize: 42, fontWeight: 800, marginBottom: 12 }}>

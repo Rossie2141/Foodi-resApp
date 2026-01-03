@@ -6,6 +6,7 @@ import { setActivePage } from "./redux/slices/navigationSlice";
 import Header from "./components/CommonComponents/Header";
 import Footer from "./components/CommonComponents/Footer";
 import CartPage from "./components/Pages/Cart/CartPage";
+import ContactPage from "./components/Pages/Contact/ContactPage";
 
 
 const Home = lazy(() => import("./components/Pages/Home/Home"));
@@ -53,6 +54,7 @@ const App = () => {
           <Route path="/services" element={<ServicePage />} />
           <Route path="/offers" element={<OfferPage />} />
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/contact" element={<ContactPage />} />
         </Routes>
       </Suspense>
 

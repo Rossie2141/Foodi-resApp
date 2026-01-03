@@ -4,6 +4,11 @@ import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CardGiftcardIcon from "@mui/icons-material/CardGiftcard";
 
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { setActivePage } from "../../../redux/slices/navigationSlice";
+
+
 const services = [
   {
     icon: <RestaurantIcon />,
@@ -28,6 +33,17 @@ const services = [
 ];
 
 const OurServices = () => {
+
+   const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const activePage = useSelector((state) => state.navigation.activePage);
+  
+    const handleNav = (page, path) => {
+      dispatch(setActivePage(page));
+      navigate(path);
+      setMobileMenuOpen(false);
+    };
+
   return (
     <section style={styles.section}>
       <div style={styles.container}>
@@ -47,7 +63,7 @@ const OurServices = () => {
             hospitality.
           </p>
 
-          <button style={styles.btn}>Explore</button>
+          <button style={styles.btn}  onClick={()=>handleNav("services","/services")}>Explore</button>
         </div>
 
         {/* RIGHT */}
@@ -82,6 +98,7 @@ const styles = {
     gap: "80px",
     alignItems: "center",
     flexWrap: "wrap",
+    
   },
 
   left: {

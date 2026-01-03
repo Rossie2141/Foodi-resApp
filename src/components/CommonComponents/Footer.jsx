@@ -4,12 +4,28 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { setActivePage } from "../../redux/slices/navigationSlice";
+
 const Footer = () => {
+
+  const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const activePage = useSelector((state) => state.navigation.activePage);
+  
+    const handleNav = (page, path) => {
+      dispatch(setActivePage(page));
+      navigate(path);
+      setMobileMenuOpen(false);
+    };
+
+
   return (
     <footer style={styles.footer}>
       <div style={styles.top}>
         <div>
-          <h3 style={styles.logo}>Poodi</h3>
+          <h3 style={styles.logo}>Poodie</h3>
           <p style={styles.desc}>
             Savor the artistry where every dish is a culinary masterpiece
           </p>
@@ -25,10 +41,10 @@ const Footer = () => {
 
         <div>
           <h4 style={styles.heading}>Main Menu</h4>
-          <p>Home</p>
-          <p>Offers</p>
-          <p>Menus</p>
-          <p>Reservation</p>
+          <p style={styles.clickable} onClick={()=>handleNav("home","/")}>Home</p>
+          <p style={styles.clickable} onClick={()=>handleNav("offers","/offers")}>Offers</p>
+          <p style={styles.clickable} onClick={()=>handleNav("menu","/menu")}>Menus</p>
+          {/* <p>Reservation</p> */}
         </div>
 
         <div>
@@ -63,6 +79,10 @@ const styles = {
   footer: {
     padding: "80px clamp(20px, 6vw, 80px) 40px",
     fontFamily: "Poppins, sans-serif",
+  },
+
+  clickable: {
+    cursor: "pointer",
   },
 
   top: {
