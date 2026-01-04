@@ -9,6 +9,7 @@ import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
 import CallOutlinedIcon from "@mui/icons-material/CallOutlined";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -219,8 +220,13 @@ const Header = () => {
 
         {/* Right */}
         <div style={useStyles.headerActions}>
-          <button style={useStyles.iconBtn}>
+          <button style={useStyles.iconBtn} onClick={()=>handleNav("account", "/account")}>
             <AccountCircleOutlinedIcon />
+          </button>
+          
+
+          <button style={useStyles.iconBtn} onClick={()=>handleNav("account", "/account")}>
+            <FavoriteBorderOutlinedIcon />
           </button>
 
           <div style={useStyles.cart}>

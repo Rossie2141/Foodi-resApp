@@ -4,6 +4,7 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { addToCart } from "../../../redux/slices/cartSlice";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
+import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 
 const API_BASE_URL = "https://foddie-res-app-backend.vercel.app";
 
@@ -25,50 +26,16 @@ const useStyles = () => ({
   menuInner: { maxWidth: "1400px", margin: "0 auto", padding: "0 32px" },
   menuTitle: { fontSize: "36px", fontWeight: 700, textAlign: "center", marginTop: "48px" },
   menuSubtitle: { textAlign: "center", color: "#666", margin: "12px 0 64px" },
-  
   categoryBar: { display: "flex", justifyContent: "center", gap: "15px", marginBottom: "64px", flexWrap: "wrap" },
   categoryPill: { padding: "12px 24px", borderRadius: "12px", border: "1px solid #e6e6e6", background: "#fff", fontWeight: 600, color: "#333", cursor: "pointer", transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)", userSelect: "none" },
   categoryPillActive: { padding: "12px 24px", borderRadius: "12px", border: "1px solid #000", background: "#000", fontWeight: 600, color: "#fff", cursor: "pointer", boxShadow: "0 4px 12px rgba(0,0,0,0.15)" },
-
   sectionHeader: { margin: "48px 0 24px", display: "flex", justifyContent: "space-between", alignItems: "center" },
   sectionHeaderLeft: { display: "flex", alignItems: "center", gap: "12px" },
-  
-  // Minimize Toggle Button
-  collapseBtn: {
-    width: "28px",
-    height: "28px",
-    borderRadius: "6px",
-    border: "1px solid #eee",
-    background: "#fff",
-    cursor: "pointer",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: "18px",
-    fontWeight: "bold",
-    color: "#888",
-    transition: "all 0.2s ease"
-  },
-
+  collapseBtn: { width: "28px", height: "28px", borderRadius: "6px", border: "1px solid #eee", background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "18px", fontWeight: "bold", color: "#888", transition: "all 0.2s ease" },
   sectionHeaderTitle: { margin: 0, fontSize: "28px", cursor: "pointer" , color:'#7ED957'},
   sectionHeaderCount: { fontSize: "14px", color: "#aaa", marginLeft: "8px", fontWeight: 400 },
-  
-  // Swipe Container Logic
-  swipeContainer: {
-    display: "grid",
-    transition: "grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease",
-  },
-
-  menuScroll: { 
-    display: "flex", 
-    gap: "28px", 
-    overflowX: "auto", 
-    scrollBehavior: "smooth", 
-    scrollbarWidth: "none", 
-    padding: "10px 0 30px",
-    minHeight: 0 // Required for grid-row animation to work
-  },
-
+  swipeContainer: { display: "grid", transition: "grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease" },
+  menuScroll: { display: "flex", gap: "28px", overflowX: "auto", scrollBehavior: "smooth", scrollbarWidth: "none", padding: "10px 0 30px", minHeight: 0 },
   menuCard: { background: "white", borderRadius: "24px", boxShadow: "0 8px 30px rgba(0,0,0,0.06)", overflow: "hidden", width: "300px", height: "400px", flexShrink: 0, display: "flex", flexDirection: "column" },
   menuCardTop: { height: "160px", minHeight: "160px", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" },
   addBtn: { position: "absolute", bottom: "16px", right: "16px", width: "36px", height: "36px", borderRadius: "50%", border: "none", background: "#5dd35d", color: "white", fontSize: "20px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 },
@@ -87,20 +54,58 @@ const MenuComponents = () => {
   const [dishes, setDishes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState("all");
-  
-  // Track which categories are minimized
   const [collapsedCategories, setCollapsedCategories] = useState({});
-
   const scrollRefs = useRef({});
 
+  // CONNECTION MONITORING LOGIC
   useEffect(() => {
+    const handleOnline = () => {
+      toast.success("Back online! Your connection is restored.", { id: "network-status" });
+      // Optionally re-fetch data if initial fetch failed
+      if (dishes.length === 0) fetchDishes();
+    };
+
+    const handleOffline = () => {
+      toast.error("You are offline. Please check your internet connection.", {
+        id: "network-status",
+        duration: 4000,
+        icon: "⚠️",
+      });
+    };
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    // Initial check
+    if (!navigator.onLine) handleOffline();
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, [dishes.length]);
+
+  const fetchDishes = () => {
+    setLoading(true);
     fetch(`${API_BASE_URL}/dishes/`)
       .then((res) => res.json())
       .then((data) => {
         setDishes(data);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch((err) => {
+        console.error("Fetch error:", err);
+        setLoading(false);
+        if (!navigator.onLine) {
+          toast.error("Could not load menu: No internet.");
+        } else {
+          toast.error("Failed to load menu from server.");
+        }
+      });
+  };
+
+  useEffect(() => {
+    fetchDishes();
   }, []);
 
   const groupedDishes = dishes.reduce((acc, dish) => {
@@ -113,10 +118,7 @@ const MenuComponents = () => {
   const categories = ["all", ...Object.keys(groupedDishes)];
 
   const toggleCollapse = (cat) => {
-    setCollapsedCategories(prev => ({
-      ...prev,
-      [cat]: !prev[cat]
-    }));
+    setCollapsedCategories(prev => ({ ...prev, [cat]: !prev[cat] }));
   };
 
   const scroll = (category, direction) => {
@@ -162,6 +164,12 @@ const MenuComponents = () => {
           ))}
         </div>
 
+        {dishes.length === 0 && !loading && (
+          <div style={{ textAlign: "center", padding: "40px", color: "#888" }}>
+            <p>No dishes found. Please check your connection and refresh.</p>
+          </div>
+        )}
+
         {Object.entries(groupedDishes)
           .filter(([cat]) => activeCategory === "all" || activeCategory === cat)
           .map(([cat, items]) => {
@@ -179,10 +187,7 @@ const MenuComponents = () => {
                     >
                       {isCollapsed ? "+" : "-"}
                     </button>
-                    <h2 
-                      style={styles.sectionHeaderTitle} 
-                      onClick={() => toggleCollapse(cat)}
-                    >
+                    <h2 style={styles.sectionHeaderTitle} onClick={() => toggleCollapse(cat)}>
                       {formatCategoryTitle(cat)}
                       <span style={styles.sectionHeaderCount}>({items.length})</span>
                     </h2>
@@ -196,7 +201,6 @@ const MenuComponents = () => {
                   )}
                 </div>
 
-                {/* THE MINIMIZABLE AREA */}
                 <div style={{
                   ...styles.swipeContainer,
                   gridTemplateRows: isCollapsed ? "0fr" : "1fr",
