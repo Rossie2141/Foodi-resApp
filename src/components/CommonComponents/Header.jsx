@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setActivePage } from "../../redux/slices/navigationSlice";
+import { logout } from "../../redux/slices/authSlice";
+import api from "../../api/axios";
 
+import { toast } from "react-hot-toast";
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import SearchIcon from "@mui/icons-material/Search";
 import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
@@ -10,6 +13,7 @@ import CallOutlinedIcon from "@mui/icons-material/CallOutlined";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -22,6 +26,18 @@ const Header = () => {
     dispatch(setActivePage(page));
     navigate(path);
     setMobileMenuOpen(false);
+  };
+
+  const handleLogout = async () => {
+    const tId = toast.loading("Logging out...");
+    try {
+      await api.post("/auth/logout");
+      dispatch(logout());
+      toast.success("Logged out", { id: tId });
+      navigate("/");
+    } catch (err) {
+      toast.error("Logout failed", { id: tId });
+    }
   };
 
   const useStyles = {
@@ -237,6 +253,14 @@ const Header = () => {
           <button style={useStyles.contactBtn} onClick={()=>handleNav("contact","/contact")}>
             <CallOutlinedIcon /> Contact
           </button>
+
+          <div style={useStyles.cart}>
+            <LogoutIcon  onClick={handleLogout }/>
+            {/* <span style={useStyles.cartBadge}>8</span> */}
+          </div>
+
+
+          
 
           <button
             style={useStyles.hamburger}
