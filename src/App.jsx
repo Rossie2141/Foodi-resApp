@@ -13,6 +13,7 @@ import ContactPage from "./components/Pages/Contact/ContactPage";
 import AccountPage from "./components/Pages/Account/AccountPage";
 import LoginForm from "./components/Pages/Authorization/LoginForm";
 import SignupForm from "./components/Pages/Authorization/SignupForm";
+import Favorites from "./components/Pages/Favorites/Favorites";
 
 const Home = lazy(() => import("./components/Pages/Home/Home"));
 const MenuPage = lazy(() => import("./components/Pages/Menu/MenuComponents"));
@@ -115,6 +116,7 @@ const App = () => {
           <Route path="/cart" element={<CartPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/account" element={<AccountPage />} />
+          <Route path="/liked" element={<Favorites />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Suspense>

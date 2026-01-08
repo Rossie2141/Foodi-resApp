@@ -241,7 +241,7 @@ const Header = () => {
           </button>
           
 
-          <button style={useStyles.iconBtn} onClick={()=>handleNav("account", "/account")}>
+          <button style={useStyles.iconBtn} onClick={()=>handleNav("liked", "/liked")}>
             <FavoriteBorderOutlinedIcon />
           </button>
 

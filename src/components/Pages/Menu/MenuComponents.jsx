@@ -1,10 +1,16 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
+
+// Material UI Icons
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { addToCart } from "../../../redux/slices/cartSlice";
-import { useDispatch } from "react-redux";
-import toast from "react-hot-toast";
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+
+// Redux Actions
+import { addToCart } from "../../../redux/slices/cartSlice";
+import { toggleFavorite } from "../../../redux/slices/favoriteSlice";
 
 const API_BASE_URL = "https://foddie-res-app-backend.vercel.app";
 
@@ -32,24 +38,28 @@ const useStyles = () => ({
   sectionHeader: { margin: "48px 0 24px", display: "flex", justifyContent: "space-between", alignItems: "center" },
   sectionHeaderLeft: { display: "flex", alignItems: "center", gap: "12px" },
   collapseBtn: { width: "28px", height: "28px", borderRadius: "6px", border: "1px solid #eee", background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "18px", fontWeight: "bold", color: "#888", transition: "all 0.2s ease" },
-  sectionHeaderTitle: { margin: 0, fontSize: "28px", cursor: "pointer" , color:'#7ED957'},
+  sectionHeaderTitle: { margin: 0, fontSize: "28px", cursor: "pointer", color: '#7ED957' },
   sectionHeaderCount: { fontSize: "14px", color: "#aaa", marginLeft: "8px", fontWeight: 400 },
   swipeContainer: { display: "grid", transition: "grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease" },
   menuScroll: { display: "flex", gap: "28px", overflowX: "auto", scrollBehavior: "smooth", scrollbarWidth: "none", padding: "10px 0 30px", minHeight: 0 },
-  menuCard: { background: "white", borderRadius: "24px", boxShadow: "0 8px 30px rgba(0,0,0,0.06)", overflow: "hidden", width: "300px", height: "400px", flexShrink: 0, display: "flex", flexDirection: "column" },
+  menuCard: { background: "white", borderRadius: "24px", boxShadow: "0 8px 30px rgba(0,0,0,0.06)", overflow: "hidden", width: "300px", height: "420px", flexShrink: 0, display: "flex", flexDirection: "column" },
   menuCardTop: { height: "160px", minHeight: "160px", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" },
   addBtn: { position: "absolute", bottom: "16px", right: "16px", width: "36px", height: "36px", borderRadius: "50%", border: "none", background: "#5dd35d", color: "white", fontSize: "20px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 },
   menuCardBody: { padding: "20px", display: "flex", flexDirection: "column", flexGrow: 1 },
   menuCardTitle: { margin: "0 0 6px", fontSize: "18px", display: "-webkit-box", WebkitLineClamp: 1, WebkitBoxOrient: "vertical", overflow: "hidden" },
   menuCardDesc: { fontSize: "14px", color: "#777", marginBottom: "16px", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden", lineHeight: "1.5" },
   menuCardFooter: { display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "auto" },
-  price: { fontWeight: 600, color: "#4caf50" },
-  arrowBtn: { width: "44px", height: "44px", borderRadius: "50%", border: "none", background: "#7ED957", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#333" }
+  price: { fontWeight: 600, color: "#4caf50", fontSize: "18px" },
+  arrowBtn: { width: "44px", height: "44px", borderRadius: "50%", border: "none", background: "#7ED957", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#333" },
+  likeBtn: { background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", transition: "transform 0.2s ease" }
 });
 
 const MenuComponents = () => {
   const dispatch = useDispatch();
   const styles = useStyles();
+
+  // Redux Selectors
+  const favoriteItems = useSelector((state) => state.favorites.items);
 
   const [dishes, setDishes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -57,26 +67,18 @@ const MenuComponents = () => {
   const [collapsedCategories, setCollapsedCategories] = useState({});
   const scrollRefs = useRef({});
 
-  // CONNECTION MONITORING LOGIC
+  // Connection Monitoring
   useEffect(() => {
     const handleOnline = () => {
-      toast.success("Back online! Your connection is restored.", { id: "network-status" });
-      // Optionally re-fetch data if initial fetch failed
+      toast.success("Back online!", { id: "network-status" });
       if (dishes.length === 0) fetchDishes();
     };
-
     const handleOffline = () => {
-      toast.error("You are offline. Please check your internet connection.", {
-        id: "network-status",
-        duration: 4000,
-        icon: "⚠️",
-      });
+      toast.error("You are offline.", { id: "network-status", duration: 4000, icon: "⚠️" });
     };
 
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
-
-    // Initial check
     if (!navigator.onLine) handleOffline();
 
     return () => {
@@ -96,11 +98,7 @@ const MenuComponents = () => {
       .catch((err) => {
         console.error("Fetch error:", err);
         setLoading(false);
-        if (!navigator.onLine) {
-          toast.error("Could not load menu: No internet.");
-        } else {
-          toast.error("Failed to load menu from server.");
-        }
+        toast.error("Failed to load menu from server.");
       });
   };
 
@@ -141,6 +139,7 @@ const MenuComponents = () => {
         .pill-animate { animation: spotlightIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
         .category-pill-hover:active { transform: scale(0.95); }
         .collapse-btn:hover { background: #000 !important; color: #fff !important; border-color: #000 !important; }
+        .like-btn-hover:hover { transform: scale(1.2); }
         div::-webkit-scrollbar { display: none; }
       `}</style>
 
@@ -148,6 +147,7 @@ const MenuComponents = () => {
         <h1 style={styles.menuTitle}>Our Menu</h1>
         <p style={styles.menuSubtitle}>Delicious meals, dynamically curated for you.</p>
 
+        {/* Category Filter Bar */}
         <div style={styles.categoryBar}>
           {categories.map((cat, index) => (
             <div
@@ -170,6 +170,7 @@ const MenuComponents = () => {
           </div>
         )}
 
+        {/* Menu Sections by Category */}
         {Object.entries(groupedDishes)
           .filter(([cat]) => activeCategory === "all" || activeCategory === cat)
           .map(([cat, items]) => {
@@ -210,30 +211,55 @@ const MenuComponents = () => {
                 }}>
                   <div style={{ overflow: "hidden" }}>
                     <div style={styles.menuScroll} ref={(el) => (scrollRefs.current[cat] = el)}>
-                      {items.map((item) => (
-                        <div style={styles.menuCard} key={item.id}>
-                          <div style={{ ...styles.menuCardTop, backgroundColor: config.bg }}>
-                            <span style={{ fontSize: "48px" }}>{config.icon}</span>
-                            <button
-                              style={styles.addBtn}
-                              onClick={() => {
-                                dispatch(addToCart({ ...item, quantity: 1 }));
-                                toast.success(`${item.name} added!`);
-                              }}
-                            >
-                              +
-                            </button>
-                          </div>
-                          <div style={styles.menuCardBody}>
-                            <h3 style={styles.menuCardTitle}>{item.name}</h3>
-                            <p style={styles.menuCardDesc}>{item.description || "A delicious house special."}</p>
-                            <div style={styles.menuCardFooter}>
-                              <span style={styles.price}>${item.price.toFixed(2)}</span>
-                              {item.rating && <span>⭐ {item.rating}</span>}
+                      {items.map((item) => {
+                        const isLiked = favoriteItems.some(fav => fav.id === item.id);
+                        
+                        return (
+                          <div style={styles.menuCard} key={item.id}>
+                            <div style={{ ...styles.menuCardTop, backgroundColor: config.bg }}>
+                              <span style={{ fontSize: "48px" }}>{config.icon}</span>
+                              <button
+                                style={styles.addBtn}
+                                onClick={() => {
+                                  dispatch(addToCart({ ...item, quantity: 1 }));
+                                  toast.success(`${item.name} added!`);
+                                }}
+                              >
+                                +
+                              </button>
+                            </div>
+                            <div style={styles.menuCardBody}>
+                              <h3 style={styles.menuCardTitle}>{item.name}</h3>
+                              <p style={styles.menuCardDesc}>{item.description || "A delicious house special."}</p>
+                              
+                              <div style={styles.menuCardFooter}>
+                                <span style={styles.price}>${item.price.toFixed(2)}</span>
+                                
+                                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                                  {item.rating && <span style={{fontSize: '14px'}}>⭐ {item.rating}</span>}
+                                  
+                                  {/* Like Button */}
+                                  <button 
+                                    className="like-btn-hover"
+                                    style={{ 
+                                      ...styles.likeBtn, 
+                                      color: isLiked ? "#ff4d4d" : "#ccc" 
+                                    }}
+                                    onClick={() => {
+                                      dispatch(toggleFavorite(item));
+                                      isLiked 
+                                        ? toast.error(`Removed from favorites`)
+                                        : toast.success(`Added to favorites`, { icon: '❤️' });
+                                    }}
+                                  >
+                                    {isLiked ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
+                                  </button>
+                                </div>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
