@@ -9,7 +9,7 @@ import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlin
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
 // Redux Actions
-import { addToCart } from "../../../redux/slices/cartSlice";
+import { addToCartDB } from "../../../redux/slices/cartSlice";
 import { toggleFavorite } from "../../../redux/slices/favoriteSlice";
 
 const API_BASE_URL = "https://foddie-res-app-backend.vercel.app";
@@ -221,9 +221,11 @@ const MenuComponents = () => {
                               <button
                                 style={styles.addBtn}
                                 onClick={() => {
-                                  dispatch(addToCart({ ...item, quantity: 1 }));
-                                  toast.success(`${item.name} added!`);
-                                }}
+                                  dispatch(addToCartDB(item)) // Use the Thunk instead of the local action
+                                    .unwrap()
+                                    .then(() => toast.success(`${item.name} saved to cart!`))
+                                    .catch(() => toast.error("Failed to save to cart"));
+  }}
                               >
                                 +
                               </button>

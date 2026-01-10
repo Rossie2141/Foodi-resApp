@@ -7,17 +7,16 @@ import CartItemsList from "./CartItemsList";
 import OrderSummary from "./OrderSummary";
 
 import { setActivePage } from "../../../redux/slices/navigationSlice";
-import {
-  removeFromCart,
-  increaseQty,
-  decreaseQty,
+import { 
+  removeFromCartDB, 
+  updateQuantityDB 
 } from "../../../redux/slices/cartSlice";
-
 export default function CartPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const cartItems = useSelector((state) => state.cart.items);
+  console.log("cart items:", cartItems);
 
   const subtotal = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -43,13 +42,17 @@ export default function CartPage() {
       >
         <CartItemsList
           items={cartItems}
-          onIncrease={(id) => dispatch(increaseQty(id))}
-          onDecrease={(id) => dispatch(decreaseQty(id))}
-          onRemove={(id) => dispatch(removeFromCart(id))}
-          onContinueShopping={() => {
-            dispatch(setActivePage("menu"));
-            navigate("/menu");
+          onIncrease={(id) => {
+            // 'id' here comes from the 'item.product_id' passed by the child component
+            dispatch(updateQuantityDB({ productId: id, action: "increase" }));
           }}
+          onDecrease={(id) => {
+            dispatch(updateQuantityDB({ productId: id, action: "decrease" }));
+          }}
+          onRemove={(id) => {
+            dispatch(removeFromCartDB(id));
+          }}
+          onContinueShopping={() => navigate("/menu")}
         />
 
         <OrderSummary

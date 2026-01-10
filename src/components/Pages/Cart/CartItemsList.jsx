@@ -27,7 +27,7 @@ const CartItemsList = ({
     ) : (
       items.map((item) => (
         <CartItem
-          key={item.id}
+          key={item.product_id}   // ✅ FIX: stable & correct key
           item={item}
           onIncrease={onIncrease}
           onDecrease={onDecrease}

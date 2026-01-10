@@ -5,6 +5,7 @@ import { useEffect, lazy, Suspense, useState } from "react";
 import api from "./api/axios";
 import { setActivePage } from "./redux/slices/navigationSlice";
 import { loginSuccess, logout, setLoading } from "./redux/slices/authSlice";
+import { fetchCartDB } from "./redux/slices/cartSlice";
 
 import Header from "./components/CommonComponents/Header";
 import Footer from "./components/CommonComponents/Footer";
@@ -32,6 +33,7 @@ const App = () => {
       try {
         const response = await api.get("/auth/me");
         dispatch(loginSuccess(response.data));
+        dispatch(fetchCartDB());
       } catch (error) {
         if (error.response?.status === 401) {
           dispatch(logout());

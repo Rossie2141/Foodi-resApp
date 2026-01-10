@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { makeStyles } from "@mui/styles";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleFavorite } from "../../../redux/slices/favoriteSlice";
-import { addToCart } from "../../../redux/slices/cartSlice";
+import { addToCartDB } from "../../../redux/slices/cartSlice";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { setActivePage } from "../../../redux/slices/navigationSlice";
 
 // Icons (Optional: Use MUI icons if you prefer them over emojis)
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -49,6 +51,14 @@ const CATEGORY_ICONS = {
 const Favorites = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const activePage = useSelector((state) => state.navigation.activePage);
+  
+    const handleNav = (page, path) => {
+      dispatch(setActivePage(page));
+      navigate(path);
+      setMobileMenuOpen(false);
+    };
   
   // 1. Get real data from Redux
   const likedItems = useSelector((state) => state.favorites.items);
@@ -65,7 +75,7 @@ const Favorites = () => {
   };
 
   const handleAddToCart = (item) => {
-    dispatch(addToCart({ ...item, quantity: 1 }));
+    dispatch(addToCartDB({ ...item, quantity: 1 }));
     toast.success(`${item.name} added to cart!`);
   };
 
@@ -107,6 +117,19 @@ const Favorites = () => {
           <div style={{ textAlign: 'center', padding: '100px 0' }}>
             <h2>No favorites yet!</h2>
             <p>Go to the menu and heart some dishes to see them here.</p>
+            <button
+                onClick={()=>handleNav("menu","/menu")}
+                style={{
+                  marginTop: "20px",
+                  background: "none",
+                  border: "none",
+                  color: "#39DB4A",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                }}
+              >
+                ← Explore Menu
+              </button>
           </div>
         ) : (
           <div className={classes.grid}>

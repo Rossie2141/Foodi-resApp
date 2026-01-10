@@ -41,7 +41,7 @@ const CartItem = ({ item, onIncrease, onDecrease, onRemove }) => (
 
     <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
       <button
-        onClick={() => onRemove(item.id)}
+        onClick={() => onRemove(item.product_id)}
         style={{
           background: "#ffebee",
           color: "#FF6B6B",
@@ -64,9 +64,9 @@ const CartItem = ({ item, onIncrease, onDecrease, onRemove }) => (
           borderRadius: "12px",
         }}
       >
-        <button onClick={() => onDecrease(item.id)}>-</button>
+        <button onClick={() => onDecrease(item.product_id)}>-</button>
         <strong>{item.quantity}</strong>
-        <button onClick={() => onIncrease(item.id)}>+</button>
+        <button onClick={() => onIncrease(item.product_id)}>+</button>
       </div>
     </div>
   </div>

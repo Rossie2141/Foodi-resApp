@@ -7,7 +7,6 @@ import api from "../../api/axios";
 
 import { toast } from "react-hot-toast";
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import SearchIcon from "@mui/icons-material/Search";
 import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
 import CallOutlinedIcon from "@mui/icons-material/CallOutlined";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -40,6 +39,41 @@ const Header = () => {
     }
   };
 
+  // Internal Styles with Media Queries
+  const responsiveStyles = `
+    .desktop-nav {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
+
+    .hamburger-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .contact-btn-text {
+        display: inline;
+    }
+
+    @media (max-width: 968px) {
+      .desktop-nav {
+        display: none;
+      }
+      .hamburger-btn {
+        display: block;
+      }
+      .contact-btn-text {
+        display: none;
+      }
+      .header-actions {
+        gap: 10px !important;
+      }
+    }
+  `;
+
   const useStyles = {
     header: {
       display: "flex",
@@ -56,7 +90,6 @@ const Header = () => {
       boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
       boxSizing: "border-box",
     },
-
     logo: {
       display: "flex",
       alignItems: "center",
@@ -66,7 +99,6 @@ const Header = () => {
       gap: "5px",
       cursor: "pointer",
     },
-
     logoIcon: {
       width: "30px",
       height: "30px",
@@ -77,71 +109,44 @@ const Header = () => {
       lineHeight: "30px",
       fontWeight: "bold",
     },
-
-    nav: {
-      display: "flex",
-      alignItems: "center",
-      gap: "25px",
-    },
-
     navMobile: {
       position: "fixed",
       top: 0,
       right: mobileMenuOpen ? 0 : "-100%",
-      width: "70%",
-      maxWidth: "300px",
+      width: "250px",
       height: "100vh",
       backgroundColor: "#fff",
+      display: "flex",
       flexDirection: "column",
       padding: "80px 30px",
-      gap: "20px",
-      transition: "right 0.3s ease",
+      gap: "25px",
+      transition: "right 0.3s ease-in-out",
       boxShadow: "-2px 0 10px rgba(0,0,0,0.1)",
-      zIndex: 999,
+      zIndex: 1001,
     },
-
     navLink: {
       cursor: "pointer",
       fontWeight: 500,
       color: "#000",
+      fontSize: "16px"
     },
-
     activeLink: {
       color: "#7ed957",
+      fontWeight: "bold"
     },
-
     headerActions: {
       display: "flex",
       alignItems: "center",
       gap: "15px",
     },
-
     iconBtn: {
       background: "none",
       border: "none",
       cursor: "pointer",
-    },
-
-    cart: {
-      position: "relative",
-      cursor: "pointer",
-    },
-
-    cartBadge: {
-      position: "absolute",
-      top: "-8px",
-      right: "-8px",
-      backgroundColor: "#7ed957",
-      color: "#fff",
-      borderRadius: "50%",
-      width: "18px",
-      height: "18px",
-      fontSize: "12px",
       display: "flex",
       alignItems: "center",
-      justifyContent: "center",
+      padding: 0
     },
-
     contactBtn: {
       backgroundColor: "#7ed957",
       color: "#fff",
@@ -153,22 +158,13 @@ const Header = () => {
       alignItems: "center",
       gap: "5px",
     },
-
-    hamburger: {
-      display: "none",
-      background: "none",
-      border: "none",
-      cursor: "pointer",
-    },
-
     overlay: {
       position: "fixed",
       inset: 0,
       backgroundColor: "rgba(0,0,0,0.5)",
       display: mobileMenuOpen ? "block" : "none",
-      zIndex: 998,
+      zIndex: 1000,
     },
-
     closeBtn: {
       position: "absolute",
       top: 20,
@@ -179,110 +175,91 @@ const Header = () => {
     },
   };
 
+  const navItems = [
+    { name: "Home", id: "home", path: "/" },
+    { name: "Menu", id: "menu", path: "/menu" },
+    { name: "Services", id: "services", path: "/services" },
+    { name: "Offers", id: "offers", path: "/offers" },
+  ];
+
   return (
     <>
+      <style>{responsiveStyles}</style>
+      
       <header style={useStyles.header}>
         {/* Logo */}
-        <div
-          style={useStyles.logo}
-          onClick={() => handleNav("home", "/")}
-        >
+        <div style={useStyles.logo} onClick={() => handleNav("home", "/")}>
           <span style={useStyles.logoIcon}>P</span>
           <span>OODIE</span>
         </div>
 
         {/* Desktop Nav */}
-        <nav style={useStyles.nav} className="desktop-nav">
-          <span
-            style={{
-              ...useStyles.navLink,
-              ...(activePage === "home" && useStyles.activeLink),
-            }}
-            onClick={() => handleNav("home", "/")}
-          >
-            Home
-          </span>
-
-          <span
-            style={{
-              ...useStyles.navLink,
-              ...(activePage === "menu" && useStyles.activeLink),
-            }}
-            onClick={() => handleNav("menu", "/menu")}
-          >
-            Menu
-          </span>
-
-          <span
-            style={{
-              ...useStyles.navLink,
-              ...(activePage === "services" && useStyles.activeLink),
-            }}
-            onClick={() => handleNav("services", "/services")}
-          >
-            Services
-          </span>
-
-          <span
-            style={{
-              ...useStyles.navLink,
-              ...(activePage === "offers" && useStyles.activeLink),
-            }}
-            onClick={() => handleNav("offers", "/offers")}
-          >
-            Offers
-          </span>
+        <nav className="desktop-nav">
+          {navItems.map((item) => (
+            <span
+              key={item.id}
+              style={{
+                ...useStyles.navLink,
+                ...(activePage === item.id && useStyles.activeLink),
+              }}
+              onClick={() => handleNav(item.id, item.path)}
+            >
+              {item.name}
+            </span>
+          ))}
         </nav>
 
-        {/* Right */}
-        <div style={useStyles.headerActions}>
-          <button style={useStyles.iconBtn} onClick={()=>handleNav("account", "/account")}>
+        {/* Action Icons */}
+        <div style={useStyles.headerActions} className="header-actions">
+          <button style={useStyles.iconBtn} onClick={() => handleNav("account", "/account")}>
             <AccountCircleOutlinedIcon />
           </button>
-          
 
-          <button style={useStyles.iconBtn} onClick={()=>handleNav("liked", "/liked")}>
+          <button style={useStyles.iconBtn} onClick={() => handleNav("liked", "/liked")}>
             <FavoriteBorderOutlinedIcon />
           </button>
 
-          <div style={useStyles.cart}>
-            <WorkOutlineIcon  onClick={()=> handleNav("cart", "/cart")}/>
-            {/* <span style={useStyles.cartBadge}>8</span> */}
-          </div>
-
-          <button style={useStyles.contactBtn} onClick={()=>handleNav("contact","/contact")}>
-            <CallOutlinedIcon /> Contact
+          <button style={useStyles.iconBtn} onClick={() => handleNav("cart", "/cart")}>
+            <WorkOutlineIcon />
           </button>
 
-          <div style={useStyles.cart}>
-            <LogoutIcon  onClick={handleLogout }/>
-            {/* <span style={useStyles.cartBadge}>8</span> */}
-          </div>
+          <button style={useStyles.contactBtn} onClick={() => handleNav("contact", "/contact")}>
+            <CallOutlinedIcon /> 
+            <span className="contact-btn-text">Contact</span>
+          </button>
 
+          <button style={useStyles.iconBtn} onClick={handleLogout}>
+            <LogoutIcon />
+          </button>
 
-          
-
-          <button
-            style={useStyles.hamburger}
-            onClick={() => setMobileMenuOpen(true)}
-          >
+          {/* Hamburger (Mobile Only) */}
+          <button className="hamburger-btn" onClick={() => setMobileMenuOpen(true)}>
             <MenuIcon />
           </button>
         </div>
       </header>
 
-      {/* Mobile Nav */}
+      {/* Mobile Drawer */}
       <nav style={useStyles.navMobile}>
         <button style={useStyles.closeBtn} onClick={() => setMobileMenuOpen(false)}>
           <CloseIcon />
         </button>
 
-        <span onClick={() => handleNav("home", "/")}>Home</span>
-        <span onClick={() => handleNav("menu", "/menu")}>Menu</span>
-        <span onClick={() => handleNav("services", "/services")}>Services</span>
-        <span onClick={() => handleNav("offers", "/offers")}>Offers</span>
+        {navItems.map((item) => (
+          <span
+            key={item.id}
+            style={{
+              ...useStyles.navLink,
+              ...(activePage === item.id && useStyles.activeLink),
+            }}
+            onClick={() => handleNav(item.id, item.path)}
+          >
+            {item.name}
+          </span>
+        ))}
       </nav>
 
+      {/* Overlay for Mobile Menu */}
       <div style={useStyles.overlay} onClick={() => setMobileMenuOpen(false)} />
     </>
   );
